@@ -650,30 +650,8 @@ function checkout() {
 
   const message = ["Assalam-o-Alikum Sir, Sir I have To order", ...itemLines].join("\n");
 
-  const waUrl = (text) => `https://wa.me/${SITE.phoneIntl}?text=${encodeURIComponent(text)}`;
-  const openWhatsApp = (windowRef, text) => {
-    if (windowRef && !windowRef.closed) windowRef.location.href = waUrl(text);
-    else window.location.href = waUrl(text);
-  };
-
-  if (!navigator.geolocation) {
-    window.open(waUrl(message), "_blank");
-    return;
-  }
-
-  const waWindow = window.open("", "_blank");
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      const { latitude, longitude } = position.coords;
-      const mapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
-      openWhatsApp(waWindow, `${message}\n\nCurrent Location: ${mapsLink}`);
-    },
-    () => {
-      showToast("Location allow nahi hui. Order bina location ke bheja ja raha hai.");
-      openWhatsApp(waWindow, message);
-    },
-    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-  );
+  const waUrl = `https://wa.me/${SITE.phoneIntl}?text=${encodeURIComponent(message)}`;
+  window.open(waUrl, "_blank");
 }
 
 function bindEvents() {
