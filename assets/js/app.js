@@ -41,7 +41,7 @@ const plusSvg = `<svg width="19" height="19" viewBox="0 0 24 24" fill="none" str
 const starSvg = `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.9-6.2-3.3-6.2 3.3L7 14.2 2 9.3l6.9-1Z"/></svg>`;
 
 function imageTag(src, alt, extra = "") {
-  return `<img src="${src}" alt="${alt}" loading="lazy" ${extra}>`;
+  return `<img src="${src}" alt="${alt}" loading="lazy" decoding="async" ${extra}>`;
 }
 
 function productPrice(product, sel) {
@@ -306,7 +306,7 @@ function goToSlide(index) {
 
 function startSlideshow() {
   window.clearInterval(state.slideTimer);
-  state.slideTimer = window.setInterval(() => goToSlide(state.slide + 1), 7000);
+  state.slideTimer = window.setInterval(() => goToSlide(state.slide + 1), 2000);
 }
 
 function renderTabs() {
