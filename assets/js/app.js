@@ -309,11 +309,35 @@ function startSlideshow() {
   state.slideTimer = window.setInterval(() => goToSlide(state.slide + 1), 2000);
 }
 
-function renderTabs() {
-  const el = $("#menuTabs");
-  el.innerHTML = CATEGORIES.map(
-    (c) => `<button type="button" class="tab ${c.id === state.category ? "active" : ""}" data-cat="${c.id}">${c.label}</button>`
+function categoryButtons(className) {
+  return CATEGORIES.map(
+    (c) => `<button type="button" class="${className} ${c.id === state.category ? "active" : ""}" data-cat="${c.id}">${c.label}</button>`
   ).join("");
+}
+
+function renderTabs() {
+  $("#menuTabs").innerHTML = categoryButtons("tab");
+  $("#navCategoryMenu").innerHTML = categoryButtons("nav-cat-option");
+}
+
+function closeNavCategoryMenu() {
+  $("#navCategoryMenu").classList.remove("open");
+  $("#navCategoryToggle").setAttribute("aria-expanded", "false");
+}
+
+function closeSocialPopover() {
+  $("#socialPopover").classList.remove("open");
+  $("#socialPopover").setAttribute("aria-hidden", "true");
+  $("#socialToggle").setAttribute("aria-expanded", "false");
+}
+
+function setCategory(id, scroll) {
+  state.category = id;
+  $$("[data-cat]").forEach((btn) => btn.classList.toggle("active", btn.dataset.cat === id));
+  renderMenu();
+  if (scroll) {
+    $(id === "deals" ? "#deals" : "#menu")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 }
 
 function sizeButtons(product, sel) {
@@ -655,14 +679,41 @@ function checkout() {
 }
 
 function bindEvents() {
-  $("#menuTabs").addEventListener("click", (e) => {
-    const tab = e.target.closest("[data-cat]");
-    if (!tab) return;
-    state.category = tab.dataset.cat;
-    $$("#menuTabs .tab").forEach((t) => t.classList.toggle("active", t === tab));
-    renderMenu();
-    if (state.category === "deals") {
-      $("#deals")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  $("#navCategoryToggle").addEventListener("click", () => {
+    const menu = $("#navCategoryMenu");
+    const open = !menu.classList.contains("open");
+    menu.classList.toggle("open", open);
+    $("#navCategoryToggle").setAttribute("aria-expanded", String(open));
+  });
+
+  $(".nav-dropdown > a").addEventListener("click", closeNavCategoryMenu);
+
+  $("#socialToggle").addEventListener("click", () => {
+    const popover = $("#socialPopover");
+    const open = !popover.classList.contains("open");
+    popover.classList.toggle("open", open);
+    popover.setAttribute("aria-hidden", String(!open));
+    $("#socialToggle").setAttribute("aria-expanded", String(open));
+  });
+
+  $$("#socialPopover a").forEach((link) => link.addEventListener("click", closeSocialPopover));
+
+  document.addEventListener("click", (e) => {
+    const catBtn = e.target.closest("[data-cat]");
+    if (catBtn) {
+      const fromHeader = !!catBtn.closest("#navCategoryMenu");
+      setCategory(catBtn.dataset.cat, fromHeader || catBtn.dataset.cat === "deals");
+      closeNavCategoryMenu();
+      return;
+    }
+    if (!e.target.closest(".nav-dropdown")) closeNavCategoryMenu();
+    if (!e.target.closest("#floatingSocial")) closeSocialPopover();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeNavCategoryMenu();
+      closeSocialPopover();
     }
   });
 
