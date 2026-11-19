@@ -2,7 +2,7 @@ const IMG = (id, w = 900) =>
   `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=80`;
 
 const SITE = {
-  name: "FLAVOR HIVE",
+  name: "Flavour Hive",
   tagline: "BROAST - PIZZA - BURGER",
   phoneDisplay: "0325-7970-977",
   phoneIntl: "923257970977",
@@ -145,7 +145,7 @@ const MENU = [
   {
     id: "p21",
     cat: "pizza",
-    name: "Flavor Hive Special",
+    name: "Flavour Hive Special",
     toppings: [
       "Chicken",
       "Cheese",

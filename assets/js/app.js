@@ -246,7 +246,7 @@ function bindProductModal() {
 function heroMarkup(slide) {
   return `
     <span class="hero-kicker">${slide.kicker}</span>
-    <h1>${slide.line1}<br><em>${slide.line2}</em></h1>
+    <h1><span class="sr-only">Flavour Hive - </span>${slide.line1}<br><em>${slide.line2}</em></h1>
     <p>${slide.text}</p>
     <div class="hero-actions">
       <a href="#menu" class="btn btn-yellow btn-lg">${plusSvg} Order Now</a>
